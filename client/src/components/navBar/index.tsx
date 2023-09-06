@@ -30,7 +30,7 @@ export default component$(() => {
     return (
         <header
             class={"flex justify-between top-0 left-0 items-center w-full p-4 fixed z-20" + (store.scrolled ? ' bg-slate-900 shadow text-white' : ' bg-transparent')}
-            document:onScroll $={() => {
+            document:onScroll$={() => {
             if (window.scrollY > 0) {
                 store.scrolled = true
             } else {
@@ -39,7 +39,10 @@ export default component$(() => {
 
         }}>
             <div>
-                <a class="font-bold">ECOMMERCE</a>
+                <Link href={"/"}>
+                    <h2 className="font-bold">ECOMMERCE</h2>
+                </Link>
+
             </div>
             <div class="flex justify-between p-2">
                 <div>
@@ -59,7 +62,10 @@ export default component$(() => {
                         }}><i className="fa-solid fa-magnifying-glass pr-4"></i></button>}
                     </div>
                     <div>
-                        <i className="fa-solid fa-user pr-4 cursor-pointer"></i>
+                        <Link href={"/register"}>
+                            <i className="fa-solid fa-user pr-4 cursor-pointer"></i>
+                        </Link>
+
                     </div>
 
                     <div className="relative cursor-pointer" onClick$={() => {

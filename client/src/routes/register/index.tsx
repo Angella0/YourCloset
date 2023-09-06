@@ -24,11 +24,20 @@ export default component$(()=>{
     })
 
     return(
-        <div class="mt-20">
-            <form>
-                <input placeholder="email" type="text"  bind:value={email}/>
-                <input placeholder="password" type="password"  bind:value={password}/>
-                <button type="button" onClick$={handleRegister}>Register</button>
+        <div class="mt-20 ">
+            <h2 class="text-center font-bold text-lg">Register/Sign In</h2>
+            
+            <form class="justify-center items-center content-center">
+
+                <div class="text-center ">
+               <div>
+                   <span className="block text-sm font-medium text-slate-700 justify-start">Enter Email</span>
+                   <input class="input input-bordered w-[300px]" placeholder="email" type="text"  bind:value={email}/></div>
+               <div>
+                   <span className="block text-sm font-medium text-slate-700">Enter Password</span>
+                   <input class="input input-bordered w-[300px]" placeholder="password" type="password"  bind:value={password}/></div>
+                   <div> <button class="bg-gray-800 text-white p-3 rounded btn w-[300px]" type="button" onClick$={handleRegister}>Continue</button></div>
+                </div>
             </form>
         </div>
     )

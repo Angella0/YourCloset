@@ -15,6 +15,7 @@ export interface CartItem {
     qnty:number;
     price:number
 }
+
 export const CartContextId = createContextId("cart")
 export const ProductsContextId = createContextId("items")
 export const QueryContextId = createContextId("query")

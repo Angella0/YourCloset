@@ -2,6 +2,7 @@ import {component$, useContext, useSignal, useStore, useComputed$} from "@builde
 import {Link} from "@builder.io/qwik-city";
 import {CartContextId, CartItem, InputContextId, ProductsContextId, QueryContextId} from "~/routes/layout";
 import {imageItem} from "~/routes/imageItem";
+import Profile from "~/components/register";
 
 
 export default component$(() => {
@@ -30,7 +31,7 @@ export default component$(() => {
     return (
         <header
             class={"flex justify-between top-0 left-0 items-center w-full p-4 fixed z-20" + (store.scrolled ? ' bg-slate-900 shadow text-white' : ' bg-transparent')}
-            document:onScroll$={() => {
+            document:onScroll $={() => {
             if (window.scrollY > 0) {
                 store.scrolled = true
             } else {
@@ -62,7 +63,7 @@ export default component$(() => {
                         }}><i className="fa-solid fa-magnifying-glass pr-4"></i></button>}
                     </div>
                     <div>
-                        <Link href={"/register"}>
+                        <Link href={"/profile"}>
                             <i className="fa-solid fa-user pr-4 cursor-pointer"></i>
                         </Link>
 
@@ -109,8 +110,8 @@ export default component$(() => {
                                             }}
                                                class="fa-solid fa-xmark text-sm cursor-pointer hover:opacity-40"></i>
                                         </div>
-                                    // <div>Total: $ {total.value}</div>
-                                )
+                                        // <div>Total: $ {total.value}</div>
+                                    )
                                 })}
                                 <button
                                     class=" btn bg-gray-800 text-white p-3 rounded">Checkout

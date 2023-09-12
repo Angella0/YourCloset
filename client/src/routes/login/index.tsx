@@ -8,11 +8,14 @@ export default component$(()=>{
 
     return(
         <div>
-            <h2 class="text-center font-bold text-lg">Login</h2>
             <Login/>
-            <Link href={"/register"}>
-                <p>Register</p>
-            </Link>
+            <p class="mt-0 text-center text-sm text-gray-500">
+                Not a member?
+                <a href="/register" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Register</a>
+            </p>
+
+
+
 
         </div>
     )

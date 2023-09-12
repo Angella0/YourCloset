@@ -18,6 +18,7 @@ export default component$(() => {
     useVisibleTask$(async () => {
         try {
             const x = await client.reAuthenticate()
+
         } catch (e) {
             await navigate("/login")
             console.log(e)
@@ -38,7 +39,7 @@ export default component$(() => {
         <>
 
             <main class="flex-1 flex flex-col min-b-screen">
-                <div className="mt-20">
+                <div class="mt-20 p-10">
                     <h4>Welcome to your profile</h4>
                     <button class="btn" type="button" onClick$={handleLogout}>Log out</button>
 

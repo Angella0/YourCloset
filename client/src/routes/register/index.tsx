@@ -10,11 +10,12 @@ export default component$(()=>{
     return(
 
             <>
-                <h2 class="text-center font-bold text-lg">Register</h2>
+
                 <Register/>
-                <Link href={"/login"}>
-                    <p>Login</p>
-                </Link>
+                <p class="mt-0 text-center text-sm text-gray-500">
+                    Already a member?
+                    <a href="/login" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign in</a>
+                </p>
             </>
 
     )

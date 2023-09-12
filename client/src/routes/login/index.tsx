@@ -1,34 +1,22 @@
-import {component$, useSignal,$} from "@builder.io/qwik";
+import {component$,} from "@builder.io/qwik";
 import client from "~/api/feathersapi";
-import {useNavigate} from "@builder.io/qwik-city";
+import {useNavigate,Link} from "@builder.io/qwik-city";
+import Login from "~/components/login";
 
 
 export default component$(()=>{
-    const email = useSignal("")
-    const password = useSignal("")
-    const navigate = useNavigate()
-    const handleLogin = $(async ()=>{
-        try {
-            const formData = {strategy:"local", email:email.value, password:password.value};
-            //submit
-            await client.authenticate(formData);
-            email.value=""
-            password.value=""
-            await navigate("/profile")
-        }
-        catch (e){
-            console.log(e)
-
-        }
-    })
 
     return(
-        <div class="mt-20">
-            <form>
-                <input type="text" placeholder="email" bind:value={email}/>
-                <input type="password" placeholder="password" bind:value={password}/>
-                <button class="btn" type="button" onClick$={handleLogin}>Login</button>
-            </form>
+        <div>
+            <Login/>
+            <p class="mt-0 text-center text-sm text-gray-500">
+                Not a member?
+                <a href="/register" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Register</a>
+            </p>
+
+
+
+
         </div>
     )
 })

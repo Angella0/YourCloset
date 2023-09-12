@@ -4,38 +4,44 @@ import Carousel from "~/components/carousel";
 import NavBar from "~/components/navBar";
 import Cards from "~/components/cards";
 import Subscribe from "~/components/subscribe";
-import {InputContextId, ProductsContextId, QueryContextId} from "~/routes/layout";
+import {InputContextId, ProdContextId,QueryContextId} from "~/routes/layout";
 import {imageItem} from "~/routes/imageItem";
 
 
 
 
 export default component$(() => {
-    const query = useContext(QueryContextId)
-    const inputHidden =useContext(InputContextId)
+
     const activeTab = useSignal("")
-    const item = useContext(ProductsContextId)
-    const itemprod = useComputed$(()=>{
-        return item.value.filter(itm=>((itm.attributes.category===activeTab.value) || (activeTab.value===""))).filter((itme) => {
-            const searchProd = itme.attributes.name?.toLowerCase().search(query.value?.toLowerCase())
-            return searchProd !== -1
-        }).map((itm) =>{
-            const id = itm.id;
-            const category = itm.attributes.category;
-            const itemName = itm.attributes.name;
-            const itemPrice = "$"+itm.attributes.price;
-            const itemImage = imageItem(itm);
+    const query = useContext(QueryContextId)
+
+    const inputHidden =useContext(InputContextId)
+    const products = useContext(ProdContextId)
+    const productsData = useComputed$(() => {
+        return products.filter(product => ((product.category?.name === activeTab.value) || (activeTab.value === ""))).filter((eventData) => {
+            if (query.value === "") {
+                return eventData;
+            } else if (eventData?.name.toLowerCase().includes(query.value.toLowerCase())) {
+                return eventData
+            }
+        }).map((prod) => {
+            const category = prod.category.name;
+            const prodName = prod.name;
+            const prodPrice = "$" + prod.price;
+            const prodImage = prod.image;
+            const prodId = prod._id
 
             return {
-                id: id,
-                tag: category,
-                name: itemName,
-                price: itemPrice,
-                image: itemImage
+                category: category,
+                name: prodName,
+                price: prodPrice,
+                image: prodImage,
+                _id: prodId
             }
         })
-
     })
+
+
 
     const tabs = useStore([
 
@@ -45,11 +51,11 @@ export default component$(() => {
         },
         {
             label: "NEW ARRIVAL",
-            name: "newArrivals"
+            name: "newArrival"
         },
         {
             label: "BEST SELLER",
-            name: "bestSellers"
+            name: "bestSeller"
         },
         {
             label: "TOP RATED",
@@ -58,38 +64,37 @@ export default component$(() => {
     ]);
 
 
-  return(
+
+    return(
       <>
           {inputHidden.value ? <Carousel /> : null }
+          <Carousel/>
+          <h1 class="text-xl text-center mt-16 mb-8"> OUR FEATURED <span class="font-bold"> PRODUCTS</span></h1>
+          <div class="flex justify-center mb-8">
+              <div class="tabs gap-4 text-sm">
+                  {tabs.map((tab) => {
+                      return (
+                          <div
+                              class={`cursor-pointer ${activeTab.value == tab.name ? "border-b border-black font-bold" : ""}`}
+                              onClick$={() => {
+                                  activeTab.value = tab.name
+                              }}>{tab.label}</div>
 
+                      )
+                  })}
 
-          <div>
-              <h1 class="text-xl text-center mt-16 mb-8"> OUR FEATURED <span class="font-bold"> PRODUCTS</span></h1>
-              <div class="flex justify-center mb-8">
-                  <div class="tabs gap-4 text-sm">
-                      {tabs.map((tab) =>{
-                          return(
-                             <div class={`cursor-pointer ${activeTab.value==tab.name ? "border-b border-black font-bold" : ""}`} onClick$={() =>{
-                                 activeTab.value=tab.name
-                             }}>{tab.label}</div>
-
-                          )
-                      })}
-
-                  </div>
               </div>
           </div>
           <div class=" flex mx-auto  ">
               <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {itemprod.value.map((itme) =>{
-              return(
-                  <Cards {...itme} />
-              )
-          })}
+                  {productsData.value.map((itme) =>{
+                      return(
+                          <Cards {...itme} />
+                      )
+                  })}
               </div>
           </div>
-          <Subscribe />
-
+          <Subscribe/>
           
       </>
   )

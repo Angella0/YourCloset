@@ -1,7 +1,14 @@
-import {component$, useContext, useSignal, useStore, useComputed$} from "@builder.io/qwik";
+import {component$, useContext, useSignal, useStore, useComputed$, $} from "@builder.io/qwik";
 import {Link} from "@builder.io/qwik-city";
-import {CartContextId, CartItem, InputContextId, ProductsContextId, QueryContextId} from "~/routes/layout";
+import {
+    CartContextId, CartItem,
+    InputContextId,
+    ProdContextId,
+    QueryContextId
+} from "~/routes/layout";
 import {imageItem} from "~/routes/imageItem";
+import Profile from "~/components/register";
+import {ItemProps} from "~/components/cards";
 
 
 export default component$(() => {
@@ -10,7 +17,7 @@ export default component$(() => {
     const inputHidden = useContext(InputContextId)
     const iconHidden = useSignal(false)
     const cart = useContext(CartContextId)
-    const item = useContext(ProductsContextId)
+    const item = useContext(ProdContextId)
 
 
     const store = useStore({
@@ -18,6 +25,12 @@ export default component$(() => {
         numItems: 0,
         modal: false,
     })
+
+    const checkout = $(() => {
+
+    })
+
+
 
     // const total = useComputed$(() => cart.value.reduce((acc, line) => {
     //     const product = item.find(prod => prod.id == line.id) as CartItem;
@@ -40,14 +53,14 @@ export default component$(() => {
         }}>
             <div>
                 <Link href={"/"}>
-                    <h2 className="font-bold">ECOMMERCE</h2>
+                    <h2 class="font-bold">ECOMMERCE</h2>
                 </Link>
 
             </div>
             <div class="flex justify-between p-2">
                 <div>
                     {inputHidden.value ? null : <label class="pr-2 z-20">
-                        <input className="input input-bordered flex w-[150px] h-[25px] text-black" placeholder="search"
+                        <input class="input input-bordered flex w-[150px] h-[25px] text-black" placeholder="search"
                                bind:value={query} onMouseLeave$={() => {
                             inputHidden.value = true;
                             iconHidden.value = false;
@@ -59,24 +72,25 @@ export default component$(() => {
                         {iconHidden.value ? null : <button onClick$={() => {
                             inputHidden.value = false;
                             iconHidden.value = true;
-                        }}><i className="fa-solid fa-magnifying-glass pr-4"></i></button>}
+                        }}><i class="fa-solid fa-magnifying-glass pr-4"></i></button>}
                     </div>
                     <div>
-                        <Link href={"/register"}>
-                            <i className="fa-solid fa-user pr-4 cursor-pointer"></i>
+                        <Link href={"/profile"}>
+                            <i class="fa-solid fa-user pr-4 cursor-pointer"></i>
                         </Link>
 
                     </div>
 
-                    <div className="relative cursor-pointer" onClick$={() => {
+                    <div class="relative cursor-pointer" onClick$={() => {
                         store.modal = true
                     }}>
-                        <i className="fa-solid fa-cart-shopping"></i>
+                        <i class="fa-solid fa-cart-shopping"></i>
                         {cart.value.length > 0 && <div
-                            className="absolute -top-2 -right-2 bg-red-500 rounded-full h-5 w-5 text-xs grid place-items-center">{cart.value.length}</div>}
+                            class="absolute -top-2 -right-2 bg-red-500 rounded-full h-5 w-5 text-xs grid place-items-center">{cart.value.length}</div>}
                     </div>
                 </div>
                 {store.modal && <>
+                    <form method="POST" action="https://checkout.flutterwave.com/v3/hosted/pay">
                     <div id="modal"
                          class="absolute top-0 shadow right-0 w-full h-screen overflow-scroll bg-white z-50 flex flex-col gap-4 p-4 sm:w-[500px] text-slate-900">
                         <div class="flex items-center justify-between pb-4 border-b">
@@ -93,9 +107,9 @@ export default component$(() => {
                                             <div class="flex gap-1">
                                                 <img class="h-[80px] w-[80px] object-cover" src={imageItem(item.id)}/>
                                                 <div class="flex flex-col">
-                                                    <p>{item.id.attributes.name}</p>
-                                                    <p>$ {item.id.attributes.price}</p>
-                                                    <p>Quantity: {item.qty}</p>
+                                                    <p>{item.name}</p>
+                                                    <p>$ {item.price}</p>
+                                                    <p>Quantity: {item.qnty}</p>
                                                 </div>
 
                                             </div>
@@ -109,16 +123,18 @@ export default component$(() => {
                                             }}
                                                class="fa-solid fa-xmark text-sm cursor-pointer hover:opacity-40"></i>
                                         </div>
-                                    // <div>Total: $ {total.value}</div>
+
                                 )
                                 })}
-                                <button
-                                    class=" btn bg-gray-800 text-white p-3 rounded">Checkout
+                                {/*<div>Total: $ {total.value}</div>*/}
+                                <button class=" btn bg-gray-800 text-white p-3 rounded" type="submit"
+                                        onclick$={() => checkout()}>Checkout
                                 </button>
                             </div>
                             : <div>
                                 <h3 class="text-sm">Your Cart Is Empty</h3></div>}
                     </div>
+                    </form>
                 </>}
             </div>
         </header>

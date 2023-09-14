@@ -1,11 +1,10 @@
 import {component$, useComputed$, useContext, useSignal, useStore} from "@builder.io/qwik";
 import { DocumentHead } from "@builder.io/qwik-city";
 import Carousel from "~/components/carousel";
-import NavBar from "~/components/navBar";
 import Cards from "~/components/cards";
 import Subscribe from "~/components/subscribe";
 import {InputContextId, ProdContextId,QueryContextId} from "~/routes/layout";
-import {imageItem} from "~/routes/imageItem";
+
 
 
 
@@ -25,7 +24,7 @@ export default component$(() => {
                 return eventData
             }
         }).map((prod) => {
-            const category = prod.category.name;
+            const category = prod.category?.name;
             const prodName = prod.name;
             const prodPrice = "$" + prod.price;
             const prodImage = prod.image;

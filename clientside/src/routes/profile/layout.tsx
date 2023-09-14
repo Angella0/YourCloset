@@ -10,7 +10,7 @@ import {
 } from "@builder.io/qwik";
 
 
-import { useNavigate} from "@builder.io/qwik-city";
+import {routeLoader$, useNavigate} from "@builder.io/qwik-city";
 import client from "~/api/feathersapi";
 
 export interface UserType{
@@ -20,7 +20,11 @@ export interface UserType{
 }
 
 export const AuthUserContext = createContextId<Signal<UserType>>("authUser")
-
+export const useServerTimeLoader = routeLoader$(() => {
+    return {
+        date: new Date().toISOString(),
+    };
+});
 
 
 export default component$(() => {

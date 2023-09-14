@@ -8,62 +8,50 @@ import {
     useVisibleTask$
 } from "@builder.io/qwik";
 import {routeLoader$} from '@builder.io/qwik-city';
+
 import NavBar from "~/components/navBar";
 import Footer from "~/components/footer/footer";
-import client from "~/api/feathersapi";
 import {AuthUserContext} from "~/routes/profile/layout";
-
+import client from "~/api/feathersapi";
 
 
 export interface Model {
     name?: string
 }
-
-export interface ProductsType {
-    "_id": string
-    "name": string
-    "shortDescription"?: string
-    "longDescription"?: string
-    "price": number
-    "category": CategoryType
-    "image": string
+export interface ProductsType{
+    id:number;
+    attributes:Attributes
+}
+export interface Attributes{
+    "name": string;
+    "shortDescription":string;
+    "longDescription": string;
+    "price": number;
+    "category": string;
+    "createdAt": string;
+    "updatedAt": string;
+    "publishedAt":string;
+    "image":string;
 }
 
-export interface CategoryType {
-    "name": string
-    "_id": string
+export interface CartItem {
+    id:number;
+    qnty:number;
+    image:string;
+    price:number;
+    attributes:Attributes
 }
-
-export interface CartItem{
-    "_id": string
-    "name"?: string
-    "qty": number
-    "shortDescription"?: string
-    "longDescription"?: string
-    "price"?: number
-    "category"?: CategoryType
-    "image"?: string
-
-
-
-}
-
 export const CartContextId = createContextId<Signal<CartItem[]>>("cart")
+export const ProductsContextId = createContextId<ProductsType[]>("items")
 export const QueryContextId = createContextId<Signal<string>>("query")
 export const InputContextId = createContextId<Signal<boolean>>("inputHidden")
-export const ProdContextId = createContextId<ProductsType[]>("products")
 
+const productRouteLoader = routeLoader$<ProductsType[]>(async () => {
+    const response = await fetch("http://127.0.0.1:1337/api/items?populate=image")
+    const pData = await response.json()
 
-export const useProductsData = routeLoader$<ProductsType[]>(async () => {
-    try {
-        const {data} = await client.service("products").find();
-        return data;
-    } catch (e) {
-        console.log(e)
-    }
-
+    return pData.data
 })
-
 
 export const useServerTimeLoader = routeLoader$(() => {
     return {
@@ -72,21 +60,14 @@ export const useServerTimeLoader = routeLoader$(() => {
 });
 
 export default component$(() => {
-
-    /////////variables
     const cart = useSignal<CartItem[]>([])
+    useContextProvider(CartContextId,cart)
     const inputHidden = useSignal(true)
+    useContextProvider(InputContextId,inputHidden)
     const query = useSignal("")
-    const products = useProductsData()
-
-    //////////ContextIds
-    useContextProvider(CartContextId, cart)
-    useContextProvider(InputContextId, inputHidden)
-    useContextProvider(QueryContextId, query)
-    useContextProvider(ProdContextId, products.value)
-
-
-
+    useContextProvider(QueryContextId,query)
+    const items = productRouteLoader()
+    useContextProvider(ProductsContextId,items.value)
     const authUser = useSignal()
     useContextProvider(AuthUserContext,authUser)
 
@@ -105,7 +86,6 @@ export default component$(() => {
         }
 
     })
-
 
 
 

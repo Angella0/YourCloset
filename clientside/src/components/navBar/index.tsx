@@ -1,12 +1,6 @@
-import {component$, useContext, useSignal, useStore, useComputed$, $, createContextId} from "@builder.io/qwik";
-import {Link, useNavigate} from "@builder.io/qwik-city";
-import {
-    CartContextId, CartItem,
-    InputContextId,
-    ProdContextId,
-    QueryContextId
-} from "~/routes/layout";
-import {AuthUserContext} from "~/routes/profile/layout";
+import {component$, useContext, useSignal, useStore, $} from "@builder.io/qwik";
+import {Link} from "@builder.io/qwik-city";
+import {CartContextId,InputContextId, QueryContextId} from "~/routes/layout";
 
 
 export default component$(() => {
@@ -15,11 +9,6 @@ export default component$(() => {
     const inputHidden = useContext(InputContextId)
     const iconHidden = useSignal(false)
     const cart = useContext(CartContextId)
-    const authUser = useContext(AuthUserContext)
-    const products = useContext(ProdContextId)
-
-
-
 
 
 
@@ -28,7 +17,6 @@ export default component$(() => {
         numItems: 0,
         modal: false,
     })
-
     const checkout = $(async () => {
 
 
@@ -37,19 +25,9 @@ export default component$(() => {
 
 
 
-
-    // const total = useComputed$(() => cart.value.reduce((acc, line) => {
-    //     const product = products.find(prod => prod == line.id) as CartItem;
-    //     const price = product.price
-    //     const tt = price * line.qnty;
-    //     return acc + tt
-    // }, 0))
-
-
     return (
         <header
-            class={"flex justify-between top-0 left-0 items-center w-full p-4 fixed z-20" + (store.scrolled ? ' bg-slate-900 shadow text-white' : ' bg-transparent')}
-            document:onScroll$={() => {
+            class={"flex justify-between top-0 left-0 items-center w-full p-4 fixed z-20" + (store.scrolled ? ' bg-slate-900 shadow text-white' : ' bg-transparent')} document: onScroll$={() => {
             if (window.scrollY > 0) {
                 store.scrolled = true
             } else {
@@ -61,7 +39,6 @@ export default component$(() => {
                 <Link href={"/"}>
                     <h2 class="font-bold">ECOMMERCE</h2>
                 </Link>
-
             </div>
             <div class="flex justify-between p-2">
                 <div>
@@ -84,7 +61,6 @@ export default component$(() => {
                         <Link href={"/profile"}>
                             <i class="fa-solid fa-user pr-4 cursor-pointer"></i>
                         </Link>
-
                     </div>
 
                     <div class="relative cursor-pointer" onClick$={() => {
@@ -96,7 +72,7 @@ export default component$(() => {
                     </div>
                 </div>
                 {store.modal && <>
-                    <form method="POST" action="https://checkout.flutterwave.com/v3/hosted/pay">
+                <form method="POST" action="https://checkout.flutterwave.com/v3/hosted/pay">
                     <div id="modal"
                          class="absolute top-0 shadow right-0 w-full h-screen overflow-scroll bg-white z-50 flex flex-col gap-4 p-4 sm:w-[500px] text-slate-900">
                         <div class="flex items-center justify-between pb-4 border-b">
@@ -111,11 +87,11 @@ export default component$(() => {
                                     return (
                                         <div class="bg-white p-4 flex items-center justify-between">
                                             <div class="flex gap-1">
-                                                <img class="h-[80px] w-[80px] object-cover" src={item.image}/>
+                                                <img alt="" class="h-[80px] w-[80px] object-cover" src={item.attributes?.image}/>
                                                 <div class="flex flex-col">
-                                                    <p>{item.name}</p>
-                                                    <p>$ {item.price}</p>
-                                                    <p>Quantity: {item.qty}</p>
+                                                    <p>{item.attributes?.name}</p>
+                                                    <p>$ {item.attributes?.price}</p>
+                                                    <p>Quantity: {item.qnty}</p>
                                                 </div>
 
                                             </div>
@@ -129,18 +105,18 @@ export default component$(() => {
                                             }}
                                                class="fa-solid fa-xmark text-sm cursor-pointer hover:opacity-40"></i>
                                         </div>
-
                                 )
                                 })}
                                 <input type="hidden" name="public_key" value="FLWPUBK_TEST-890b7eb4a55b40033c65102ee099bfa7-X" />
-                                <button class=" btn bg-gray-800 text-white p-3 rounded" type="submit"
+                                <button class=" btn bg-gray-800 text-white p-3 rounded"
+                                        type="submit"
                                         onclick$={() => checkout()}>Checkout
                                 </button>
                             </div>
                             : <div>
                                 <h3 class="text-sm">Your Cart Is Empty</h3></div>}
                     </div>
-                    </form>
+                </form>
                 </>}
             </div>
         </header>

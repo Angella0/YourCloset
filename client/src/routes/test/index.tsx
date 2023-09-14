@@ -1,6 +1,6 @@
 import {component$, useComputed$, useContext, useSignal} from "@builder.io/qwik";
 import {InputContextId, ProdContextId, QueryContextId} from "~/routes/layout";
-import {imageItem} from "~/routes/imageItem";
+
 import Carousel from "~/components/carousel";
 import Cards from "~/components/cards";
 import Subscribe from "~/components/subscribe";

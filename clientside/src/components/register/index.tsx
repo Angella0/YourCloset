@@ -1,37 +1,37 @@
-import {component$, useSignal, $} from "@builder.io/qwik";
+import {component$, useSignal,$} from "@builder.io/qwik";
 import client from "~/api/feathersapi";
 import {useNavigate} from "@builder.io/qwik-city";
 import {isServer} from "@builder.io/qwik/build";
-import {build} from "vite";
 
 
-export default component$(() => {
+export default component$(()=>{
     const email = useSignal("")
     const password = useSignal("")
     const navigate = useNavigate()
-    const handleLogin = $(async () => {
+    const handleRegister = $(async ()=>{
         try {
-            const formData = {strategy: "local", email: email.value, password: password.value};
+            const formData = {email:email.value,password:password.value};
             //submit
-            await client.authenticate(formData);
-            email.value = ""
-            password.value = ""
-            if (!isServer) {
+            await client.service("users").create(formData);
+            await client.authenticate({...formData,strategy:"local"});
+            email.value="";
+            password.value="";
+            if(!isServer){
                 await navigate("/profile")
             }
-
-        } catch (e) {
-            console.log(e)
-
         }
+        catch (e){
+            console.log(e);
+        }
+
     })
 
-    return (
+    return(
         <>
             <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
                 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-                        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in
-                            to your account</h2>
+                    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign Up
+                        to your account</h2>
                 </div>
                 <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                     <form class="space-y-6" action="#" method="POST">
@@ -50,7 +50,7 @@ export default component$(() => {
                                 <label for="password"
                                        class="block text-sm font-medium leading-6 text-gray-900">Password</label>
                                 <div class="text-sm">
-                                    <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot
+                                    <a href="#" class="font-semibold text-gray-800 hover:text-indigo-500">Forgot
                                         password?</a>
                                 </div>
                             </div>
@@ -62,7 +62,7 @@ export default component$(() => {
 
                         <div>
                             <button type="button"
-                                    class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick$={handleLogin}>Sign in
+                                    class="flex w-full justify-center rounded-md bg-gray-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-700" onClick$={handleRegister}>Register
                             </button>
                         </div>
                     </form>
@@ -72,5 +72,5 @@ export default component$(() => {
             </div>
         </>
 
-)
+    )
 })
